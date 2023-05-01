@@ -13,9 +13,9 @@ This will create a conda environment named `jupyter_solver` on your system, inst
 ## Run script
 To run the script, enter the following in your command line
 
-    python3 jumble_solver.py YOUR_WORD_LIST.txt YOUR_WORD
+    python3 jumble_solver.py YOUR_DICTIONARY.txt YOUR_WORD
 
-For example, given the (default) word list `corncob_lowercase.txt` and the (default) word `dog`, we would run
+For example, given the (default) dictionary `corncob_lowercase.txt` and the (default) word `dog`, we would run
     
     python3 jumble_solver.py corncob_lowercase.txt dog
 
