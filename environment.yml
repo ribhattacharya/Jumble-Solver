@@ -1,0 +1,7 @@
+name: jumble_solver
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - ipykernel
+prefix: /Users/rishabhbhattacharya/opt/anaconda3/envs/jumble_solver

@@ -1,0 +1,1 @@
+WORD_LIST_DIR = './word_lists'
