@@ -1,3 +1,7 @@
+"""
+Compute all possible sub-anagrams and valid subb-anagrams from the dictionary.
+"""
+
 from itertools import permutations
 from .binary_search import binary_search
 

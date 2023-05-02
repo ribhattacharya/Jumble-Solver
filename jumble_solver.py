@@ -13,7 +13,7 @@ def main(dictionaryName: str, word: str) -> None:
     word (type str): Input word/string.
     """
     dictionary = load_dict(dictionaryName)                 # Load and save dictionary as list
-    dictionary = check_valid_dict(dictionary)               # Rectify dictionary if it is invalid (is not sorted or contains duplicates).
+    dictionary = return_sorted_dict(dictionary)            # Rectify dictionary if it is unsorted.
 
     # Compute all sub-anagrams of input word
     allSubAnagrams = computeAllSubAnagrams(word).compute()        
