@@ -1,2 +1,2 @@
-from .check_utils import *
+from .utils import *
 from .file_utils import *

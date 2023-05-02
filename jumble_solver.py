@@ -1,26 +1,28 @@
 import sys
 from utils import *
 from scripts import *
+from time import time
 
 def main(dictionaryName: str, word: str) -> None:
     """
-    DESC:   
+    DESC: Main method which calls all other methods for the jumble problem, 
+    and prints the results.
 
     INPUTS: 
     dictionaryName (type str): Dictionary filename.
     word (type str): Input word/string.
     """
-    
-    dictionary = load_words(dictionaryName)                 # Save dictionary as list
-    if not check_sorted(dictionary):
-        print("Sorting input dictionary since it wasn't already.")
-        dictionary.sort()
-    
-    allSubAnagrams = computeAllSubAnagrams(word).compute()        # Save all sub-anagrams of input word
-    print(f'Total sub-anagrams found: {len(allSubAnagrams)}\n')
+    dictionary = load_dict(dictionaryName)                 # Load and save dictionary as list
+    dictionary = check_valid_dict(dictionary)               # Rectify dictionary if it is invalid (is not sorted or contains duplicates).
 
+    # Compute all sub-anagrams of input word
+    allSubAnagrams = computeAllSubAnagrams(word).compute()        
+    print(f'\nSub-anagrams found:\t{len(allSubAnagrams)}')
+
+    # Compute all VALID sub-anagrams of input word.
     validSubAnagrams = returnValidSubAnagrams(dictionary, allSubAnagrams).compute()
-    print(f'Total valid sub-anagrams found in dictionary: {len(validSubAnagrams)}\n')
+    print(f'Valid sub-anagrams:\t{len(validSubAnagrams)}')
+    print('Valid sub anagrams are:',validSubAnagrams)
 
 
 
@@ -32,7 +34,7 @@ if __name__=='__main__':
         word = sys.argv[2]
 
         # Run checks for invalid dictionary file and invalid word
-        check_valid_dictionary(dictionaryName)
+        check_dict_exists(dictionaryName)
         check_valid_word(word)
 
     elif len(sys.argv) == 1:
@@ -45,5 +47,12 @@ if __name__=='__main__':
     else:
         raise(TypeError(f"Expected 1 or 3 arguments, got {len(sys.argv)}."))
 
-    word = word.lower()
+    tic = time()
+    
+    # For correct matching, convert word to lowercase, since dictionary is also converted to lowercase.
+    word = word.lower()  
+    
+    print("------------------------------------------------------------------------------------")
     main(dictionaryName, word)
+    print(f'Time elapsed:\t\t{100*(time()-tic):0.2f} ms')
+    print("------------------------------------------------------------------------------------")
