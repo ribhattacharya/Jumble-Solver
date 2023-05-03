@@ -27,25 +27,5 @@ def check_valid_word(s: str) -> None:
     if not s.isalpha():
         raise(ValueError(f"Received invalid word input: {s}. Should be only alphabets."))
 
-def return_sorted_dict(dictionary: list[str]) -> list[str]:
-    """
-    DESC: Checks whether the dictionary is sorted. If not, then sorts it.
-    
-    INPUTS: 
-    dictionary (type list[str]): Dictionary as a list of string.
-    """
-    # Sorted if element[i] < element[i+1] (lexicographically) for all i.
-    isSorted = True
-    for i in range(len(dictionary)-1):
-        if dictionary[i] > dictionary[i+1]:
-            isSorted = False
-    
-    # Sort dictionary if not already.
-    if not isSorted:                           
-        print("-> Sorting input dictionary since it wasn't already.")
-        dictionary.sort()
-    
-    return dictionary
-
 
 

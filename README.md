@@ -86,6 +86,6 @@ We can summarize the results as follows,
 | Non-sorted, non-repeating 	|      	| $O(m \log m) + O(2^n \times n!) + O(\log m)$ 	|       	|
 | Non-sorted, repeating     	|      	| $O(m \log m) + O(2^n \times n!) + O(\log m)$ 	|       	|
 
-## Future improvements
-1. If input dictionary is not sorted, we can sort and save it for future use. Since the dictionary is not supposed to be changed frequently, this would be a one-time computation.
+## Future functionality improvements
+1. If input dictionary is not sorted, we can sort and save it for future use. Since the dictionary is not supposed to be changed frequently, this would be a one-time computation. This can be added with minimal changes to the existing code (only need to save/replace a file). 
 
