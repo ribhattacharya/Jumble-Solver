@@ -1,1 +1,1 @@
-WORD_LIST_DIR = './word_lists'
+WORD_LIST_DIR = './dictionaries'

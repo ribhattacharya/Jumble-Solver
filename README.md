@@ -33,7 +33,7 @@ Running either of the two commands above would give, this output.
     ------------------------------------------------------------------------------------
     Sub-anagrams found:     16
     Valid sub-anagrams:     4
-    Valid sub anagrams are: ['do', 'dog', 'go', 'god']
+    Valid sub anagrams are:  {'do', 'dog', 'go', 'god'}
     Time elapsed:           1.52 ms
     ------------------------------------------------------------------------------------
 

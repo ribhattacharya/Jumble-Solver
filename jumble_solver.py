@@ -12,7 +12,8 @@ def main(dictionaryName: str, word: str) -> None:
     dictionaryName (type str): Dictionary filename.
     word (type str): Input word/string.
     """
-    dictionary = load_dict(dictionaryName)                 # Load and save dictionary as list
+    # Load and save dictionary
+    dictionary = load_dict(dictionaryName)                 
 
     # Create an object to compute anagrams.
     jumbleSolver = computeSubAnagrams(dictionary, word)
