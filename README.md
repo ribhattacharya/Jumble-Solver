@@ -31,8 +31,6 @@ Since these are default values, you could also run the same by entering
 Running either of the two commands above would give, this output.
 
     ------------------------------------------------------------------------------------
-    -> Sorting input dictionary since it wasn't already.
-
     Sub-anagrams found:     16
     Valid sub-anagrams:     4
     Valid sub anagrams are: ['do', 'dog', 'go', 'god']
@@ -48,7 +46,6 @@ Running either of the two commands above would give, this output.
     - **utils.py**: Contains various utility functions.
     - **file_utils.py**: File manipulation functions.
 - scripts/
-    - **binary_search.py**: Binary search algorithm.
     - **sub_anagrams.py**: Compute all possible + valid sub-anagrams.
 - word_lists/
     - **mit_10k.txt**: [MIT 10K word list](https://www.mit.edu/~ecprice/wordlist.10000) (10K words)
@@ -56,36 +53,40 @@ Running either of the two commands above would give, this output.
     
 ## Features
 1. Checks if dictionary file exists and if input word contains alphabets, else raises error.
-2. Checks if the dictionary is sorted, sorts it if it's not already. This helps with the binary search.
+2. Dictionary is implemented as a hashset, so sorting is not needed and duplicate elements are rejected inherently.
 3. Handles upper/lower case and combinations by converting the dictionary and input word to lowercase for uniformity across permutations and search.
-4. Checks if input word has duplicate alphabets, since this adds duplicate sub-anagrams. Removes duplicates accordingly.
-5. Since we are performing binary search across the sorted dictionary, presence of duplicate words in the dictionary does not affect us since we don't care about the order of occurence, but only if a word is present or not. This saves us the computation time for duplicate removal.
+4. The sub-anagrams are also stored as hashsets. Thus even if input word has duplicate alphabets, the sub-anagrams are unique.
+5. Search takes $O(1)$ complexity on average due to the `set` inplementation.
+
 ## Algorithm and complexity analysis
-If dictionary (length $m$) is **sorted** and word (length $n$) contains **no repeated letters**, 
-- Power set: $O(2^n)$
-- Permutations: $O(n!)$ for each element in the power set. 
+I used Python's hashset `set()` for this implementation. Insertion in both `set()` and `List[]` take $O(1)$ time. However, the current implementation (using `set()`) improves upon the previous build (using `List[]` and binary search) majorly due to two factors,
 
-Thus we have $O(2^n \times n!)$ for computing all the anagrams. Also, binary search would take $O(\log m)$. Thus we have a final time complexity of 
-$$\boxed{O(2^n \times n!) + O(\log m)}$$
+1. Search in a `set()` takes $O(1)$ time, and it is not required to be sorted. In contrast, binary-search in a sorted `List[]` takes $O(\log m)$ time, and the sorting (if dictionary is unsorted) itself takes $O(m\log m)$ time. Both end up taking the same space $O(m)$.
+2. If the input word has repeated characters, there would be duplicate permutations when adding in a `List[]`. Rather than trying to remove duplicates seperately, adding elements in a `set()` ensures that no duplicates are added. Both methods take $O(1)$ time to append each element, but we achieve duplicate removal as a bonus by using `set()`.
 
-If dictionary (length $m$) is **sorted** and word (length $n$) contains **repeated letters**, we use Python's `set()` for duplicate removal. Since it works in $O(1)$ for each element, we have additional $O(2^n) + O(n!)$ complexity for the power set and its permutations. Thus the time complexity in this case is
-$$O(2^n \times n!)+ O(2^n) + O(n!) + O(\log m) \approx \boxed{O(2^n \times n!) + O(\log m)}$$
+If dictionary has $m$ words and input word has $n$ characters, then 
+- **Creating dictionary**: Time: $O(m)$, Space: $O(m)$
+    - Traversal over dictionary.txt file: $O(m)$
+    - Adding to set: $O(1)$ for each element in dictionary
+    - **Total time**: $O(m \times 1) = O(m)$
+    - **Total space**: $O(m)$
+- **Computing all possible sub-anagrams**:Time: $O(\lfloor n! \times e\rfloor)$, Space: $O(\lfloor n! \times e\rfloor)$
+    - Permuting _r_ letters at a time: $O({}^n P_r)$
+    - Adding to set: $O(1)$ for each element
+    - **Total time**: $O({}^n P_n + {}^n P_{n-1} + \cdots {}^n P_1 + {}^n P_0) = O(\sum_{r=0}^n {}^n P_r) = O(\lfloor n! \times e\rfloor)$. See this [link](https://math.stackexchange.com/questions/161314/what-is-the-sum-of-following-permutation-series-np0-np1-np2-cdots-npn) for the derivation.
+    - **Total space**: $O(\lfloor n! \times e\rfloor)$. 
+- **Search for valid sub-anagrams**: Time: $O(1)$, Space: $O(k)$ where $k$ is the number of valid matches in the dictionary.
+    - Search for a sub-anagram in set of words (dictionary): $O(1)$
+    - **Total time**: $O(1)$
+    - **Total space**: $O(k)$
 
-If dictionary (length $m$) is **not sorted** and word (length $n$) contains **no repeated letters**, we use Python's `.sort()` for sorting the dictionary, which works in $O(m \log m)$ (internal implementation based on Timsort). Thus the time complexity in this case is
-$$\boxed{O(m \log m) + O(2^n \times n!) + O(\log m)}$$
-
-Finally, if dictionary (length $m$) is **not sorted** and word (length $n$) contains **repeated letters**, we have 
-$$O(m \log m) + O(2^n \times n!)+ O(2^n) + O(n!) + O(\log m) \approx \boxed{O(m \log m) + O(2^n \times n!) + O(\log m)}$$
-
-We can summarize the results as follows,
-
-| Case (dictionary, word)   	| Best 	| Average                                      	| Worst 	|
-|---------------------------	|------	|----------------------------------------------	|-------	|
-| Sorted, non-repeating     	|      	| $O(2^n \times n!) + O(\log m)$               	|       	|
-| Sorted, repeating         	|      	| $O(2^n \times n!) + O(\log m)$               	|       	|
-| Non-sorted, non-repeating 	|      	| $O(m \log m) + O(2^n \times n!) + O(\log m)$ 	|       	|
-| Non-sorted, repeating     	|      	| $O(m \log m) + O(2^n \times n!) + O(\log m)$ 	|       	|
+Thus given $m$ words in the dictionary, input word of length $n$, and $k$ sub-anagram matches in the dictionary, we have
+| Step # 	| Step description                    	| Time complexity                               	| Space complexity                              	|
+|--------	|-------------------------------------	|-----------------------------------------------	|-----------------------------------------------	|
+| 1      	| Creating dictionary                 	| $O(m)$                                        	| $O(m)$                                        	|
+| 2      	| Computing all possible sub-anagrams 	| $O(\lfloor n! \times e\rfloor)$               	| $O(\lfloor n! \times e\rfloor)$               	|
+| 3      	| Search for valid sub-anagrams       	| $O(1)$                                        	| $O(k)$                                        	|
+|        	| **Total**                           	| $O(m) + O(\lfloor n! \times e\rfloor) + O(1)$ 	| $O(m) + O(\lfloor n! \times e\rfloor) + O(k)$ 	|
 
 ## Future functionality improvements
-1. If input dictionary is not sorted, we can sort and save it for future use. Since the dictionary is not supposed to be changed frequently, this would be a one-time computation. This can be added with minimal changes to the existing code (only need to save/replace a file). 
-
+1. If we have repeating characters in the input word, the duplicate permutations are currently computed before attempting to add into the `set()`. A further optimization could be to skip this computation itself.
