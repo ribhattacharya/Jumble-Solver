@@ -26,6 +26,3 @@ def check_valid_word(s: str) -> None:
 
     if not s.isalpha():
         raise(ValueError(f"Received invalid word input: {s}. Should be only alphabets."))
-
-
-

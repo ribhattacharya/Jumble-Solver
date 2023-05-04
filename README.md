@@ -4,14 +4,14 @@
 A solver for the game 'Jumble'. Given a dictionary and any word, this program returns the possible anagrams and sub-anagrams. For any clarifications, contact me (Rishabh Bhattacharya) at [ribhattacharya@ucsd.edu](mailto:ribhattacharya@ucsd.edu). Happy Jumbling!
 
 ## Working instructions
-### Create conda environment (Optional)
+### Create conda environment (_Optional unless you want to run `tests.py`_)
 To create a conda environment, run this in the terminal (assuming you have [Anaconda](https://www.anaconda.com/download/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) installed on your system).
 
     conda env create -f environment.yml
 
 This will create a conda environment named `jupyter_solver` on your system, installing the required packages.
 
-**NOTE**: You could completely skip this step, since this program only uses native python packages, and nothing extra. However, this is recommended to keep things consistent and future proofing.
+**NOTE**: You could completely skip this step, since the solver only uses native python packages. However, this is required if you want to run `tests.py` and plot graphs.
 
 ### Run script
 To run the script, enter the following in your command line
@@ -37,19 +37,27 @@ Running either of the two commands above would give, this output.
     Time elapsed:           1.52 ms
     ------------------------------------------------------------------------------------
 
+### Testing
+To run the tests and view plots, run 
+
+    python3 tests.py
 ## Repo structure
 
 - **environment.yml**: Conda environment setup file.
 - **constants.py**: Constant values like word file diectory. 
-- **jumble_solver.py**: Main interface script for this problem.  
+- **jumble_solver.py**: Main interface script for this problem. 
+- **tests.py**: Script to perform testing and performance evaluation. 
 - utils/
-    - **utils.py**: Contains various utility functions.
     - **file_utils.py**: File manipulation functions.
+    - **test_utils.py**: Contains various utility functions for testing and visualizing performance.
+    - **utils.py**: Contains various utility functions.
 - scripts/
     - **sub_anagrams.py**: Compute all possible + valid sub-anagrams.
-- word_lists/
+- dictionaries/
     - **mit_10k.txt**: [MIT 10K word list](https://www.mit.edu/~ecprice/wordlist.10000) (10K words)
     - **corncob_lowercase.txt** (default): [Corncob lowercase world list](http://www.mieliestronk.com/corncob_lowercase.txt) (58K words)
+    - **english3.txt**: [English_3](http://www.gwicks.net/textlists) (194K words)
+    - **words_alpha.txt**: [words_alpha](https://github.com/dwyl/english-words/blob/master/words_alpha.txt) (370K words)
     
 ## Features
 1. Checks if dictionary file exists and if input word contains alphabets, else raises error.
@@ -88,5 +96,30 @@ Thus given $m$ words in the dictionary, input word of length $n$, and $k$ sub-an
 | 3      	| Search for valid sub-anagrams       	| $O(1)$                                        	| $O(k)$                                        	|
 |        	| **Total**                           	| $O(m) + O(\lfloor n! \times e\rfloor) + O(1)$ 	| $O(m) + O(\lfloor n! \times e\rfloor) + O(k)$ 	|
 
+
+## Results
+
+I chose the following dictionaries and words to compare and evaluate a comprehensive performance overview.
+
+    dictionaryNames = ['mit_10k.txt', 'corncob_lowercase.txt', 'english3.txt', 'words_alpha.txt']
+    words = ['cat', 'lion', 'tiger', 'pangol', 'leopard', 'flamingo']
+
+![timeElapsed](./results/timeElapsed.png)
+
+It is clear from the graph above that permutations of longer words are more time consuming. We also see an increasing trend of time with the size of dictionary.
+
+![validLen](./results/validLen.png)
+
+We also see a dramatic increase of the number of valid sub-anagrams with word length. There is one anomaly, i.e. for `mit_10k` and `corncob_lowercase`. We would expect the former to result in less valid sub_anagrams, since it has lesser words (10K vs 58K). However, this does not happen because the `mit_10k` dictionary contains many nonsensical words, as evidenced by the following. 
+
+    $ python3 jumble_solver.py mit_10k.txt dog 
+    ------------------------------------------------------------------------------------
+    # of all possible sub-anagrams: 16
+    # of valid sub-anagrams:        10
+    Valid sub-anagrams are:          {'go', 'o', 'g', 'god', 'do', 'dg', 'og', 'd', 'dog', 'gd'}
+    Time elapsed:                   2.77 ms
+    ------------------------------------------------------------------------------------
+
+We can see that {'o', 'g', 'dg', 'og', 'gd'} are not actual words, and are hence not found in the `corncob_lowercase` dictionary, but are present in the `mit_10k` dictionary. This leads to many extraneous sub-anagrams. This problem only gets worse for longer words.
 ## Future functionality improvements
 1. If we have repeating characters in the input word, the duplicate permutations are currently computed before attempting to add into the `set()`. A further optimization could be to skip this computation itself.
