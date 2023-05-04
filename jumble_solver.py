@@ -20,7 +20,7 @@ def main(dictionaryName: str, word: str) -> None:
     validSubAnagrams = jumbleSolver.compute()
     
     print(f"# of all possible sub-anagrams:\t{jumbleSolver.size('all')}")
-    # print('Sub-anagrams are:',jumbleSolver.get_sub_anagrams('all'))
+    # print('Sub-anagrams are:',jumbleSolver.get_sub_anagrams('all'))   # Uncomment to print all sub-anagrams (could be verbose)
     print(f"# of valid sub-anagrams:\t{jumbleSolver.size('valid')}")
     print('Valid sub-anagrams are:\t\t',validSubAnagrams)
 
