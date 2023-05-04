@@ -12,17 +12,17 @@ def main(dictionaryName: str, word: str) -> None:
     dictionaryName (type str): Dictionary filename.
     word (type str): Input word/string.
     """
-    dictionary = load_dict(dictionaryName)                 # Load and save dictionary as list
-    dictionary = return_sorted_dict(dictionary)            # Rectify dictionary if it is unsorted.
+    # Load and save dictionary
+    dictionary = load_dict(dictionaryName)                 
 
-    # Compute all sub-anagrams of input word
-    allSubAnagrams = computeAllSubAnagrams(word).compute()        
-    print(f'\nSub-anagrams found:\t{len(allSubAnagrams)}')
-
-    # Compute all VALID sub-anagrams of input word.
-    validSubAnagrams = returnValidSubAnagrams(dictionary, allSubAnagrams).compute()
-    print(f'Valid sub-anagrams:\t{len(validSubAnagrams)}')
-    print('Valid sub anagrams are:',validSubAnagrams)
+    # Create an object to compute anagrams.
+    jumbleSolver = computeSubAnagrams(dictionary, word)
+    validSubAnagrams = jumbleSolver.compute()
+    
+    print(f"# of all possible sub-anagrams:\t{jumbleSolver.size('all')}")
+    # print('Sub-anagrams are:',jumbleSolver.get_sub_anagrams('all'))
+    print(f"# of valid sub-anagrams:\t{jumbleSolver.size('valid')}")
+    print('Valid sub-anagrams are:\t\t',validSubAnagrams)
 
 
 
@@ -54,5 +54,5 @@ if __name__=='__main__':
     
     print("------------------------------------------------------------------------------------")
     main(dictionaryName, word)
-    print(f'Time elapsed:\t\t{100*(time()-tic):0.2f} ms')
+    print(f'Time elapsed:\t\t\t{1000*(time()-tic):0.2f} ms')
     print("------------------------------------------------------------------------------------")
