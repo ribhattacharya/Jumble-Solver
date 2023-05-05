@@ -15,13 +15,11 @@ def main(dictionaryName: str, word: str) -> None:
     # Load and save dictionary
     dictionary = load_dict(dictionaryName)                 
 
-    # Create an object to compute anagrams.
-    jumbleSolver = computeSubAnagrams(dictionary, word)
-    validSubAnagrams = jumbleSolver.compute()
+    # Get valid sub anagrams, and additional data
+    validSubAnagrams, lenValid, lenAll = sub_anagrams(dictionary, word)
     
-    print(f"# of all possible sub-anagrams:\t{jumbleSolver.size('all')}")
-    # print('Sub-anagrams are:',jumbleSolver.get_sub_anagrams('all'))   # Uncomment to print all sub-anagrams (could be verbose)
-    print(f"# of valid sub-anagrams:\t{jumbleSolver.size('valid')}")
+    print(f"# of all possible sub-anagrams:\t{lenAll}")
+    print(f"# of valid sub-anagrams:\t{lenValid}")
     print('Valid sub-anagrams are:\t\t',validSubAnagrams)
 
 

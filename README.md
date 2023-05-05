@@ -34,7 +34,7 @@ Running either of the two commands above would give, this output.
     Sub-anagrams found:     16
     Valid sub-anagrams:     4
     Valid sub anagrams are:  {'do', 'dog', 'go', 'god'}
-    Time elapsed:           1.52 ms
+    Time elapsed:           15.77 ms
     ------------------------------------------------------------------------------------
 
 ### Testing
@@ -66,37 +66,64 @@ To run the tests and view plots, run
 4. The sub-anagrams are also stored as hashsets. Thus even if input word has duplicate alphabets, the sub-anagrams are unique.
 5. Search takes $O(1)$ complexity on average due to the `set` inplementation.
 
-## Algorithm and complexity analysis
+## Algorithm
+The **algorithm** is as follows:
+
+1. Check if the dictionary exists and the input words is valid.
+2. Read the dictionary and store it as a set,
+3. Permute the sub-anagrams and check if it exists in the dictionary. If yes, store it in another set.
+4. Return the set of all valid sub-anagrams.
+
 I used Python's hashset `set()` for this implementation. Insertion in both `set()` and `List[]` take $O(1)$ time. However, the current implementation (using `set()`) improves upon the previous build (using `List[]` and binary search) majorly due to two factors,
 
 1. Search in a `set()` takes $O(1)$ time, and it is not required to be sorted. In contrast, binary-search in a sorted `List[]` takes $O(\log m)$ time, and the sorting (if dictionary is unsorted) itself takes $O(m\log m)$ time. Both end up taking the same space $O(m)$.
-2. If the input word has repeated characters, there would be duplicate permutations when adding in a `List[]`. Rather than trying to remove duplicates seperately, adding elements in a `set()` ensures that no duplicates are added. Both methods take $O(1)$ time to append each element, but we achieve duplicate removal as a bonus by using `set()`.
+2. If the input word has repeated characters, there would be duplicate permutations when adding in a `List[]`. Rather than trying to remove duplicates separately, adding elements in a `set()` ensures that no duplicates are added. Both methods take $O(1)$ time to append each element, but we achieve duplicate removal as a bonus by using `set()`.
 
+## Complexity analysis
 If dictionary has $m$ words and input word has $n$ characters, then 
 - **Creating dictionary**: Time: $O(m)$, Space: $O(m)$
     - Traversal over dictionary.txt file: $O(m)$
     - Adding to set: $O(1)$ for each element in dictionary
-    - **Total time**: $O(m \times 1) = O(m)$
+    - **Total time**: $O(m)$
     - **Total space**: $O(m)$
-- **Computing all possible sub-anagrams**:Time: $O(\lfloor n! \times e\rfloor)$, Space: $O(\lfloor n! \times e\rfloor)$
+- **Computing all possible sub-anagrams**:Time: $O(\lfloor n! \times e\rfloor)$, Space: $0$
     - Permuting _r_ letters at a time: $O({}^n P_r)$
     - Adding to set: $O(1)$ for each element
     - **Total time**: $O({}^n P_n + {}^n P_{n-1} + \cdots {}^n P_1 + {}^n P_0) = O(\sum_{r=0}^n {}^n P_r) = O(\lfloor n! \times e\rfloor)$. See this [link](https://math.stackexchange.com/questions/161314/what-is-the-sum-of-following-permutation-series-np0-np1-np2-cdots-npn) for the derivation.
-    - **Total space**: $O(\lfloor n! \times e\rfloor)$. 
+    - **Total space**: $0$, since `permutations` from `itertools` uses `yield` to return values, so the values are not stored at the same time. Also we are only storing the words that have been found in the dictionary. This happens in the search step. 
 - **Search for valid sub-anagrams**: Time: $O(1)$, Space: $O(k)$ where $k$ is the number of valid matches in the dictionary.
     - Search for a sub-anagram in set of words (dictionary): $O(1)$
     - **Total time**: $O(1)$
     - **Total space**: $O(k)$
 
 Thus given $m$ words in the dictionary, input word of length $n$, and $k$ sub-anagram matches in the dictionary, we have
-| Step # 	| Step description                    	| Time complexity                               	| Space complexity                              	|
-|--------	|-------------------------------------	|-----------------------------------------------	|-----------------------------------------------	|
-| 1      	| Creating dictionary                 	| $O(m)$                                        	| $O(m)$                                        	|
-| 2      	| Computing all possible sub-anagrams 	| $O(\lfloor n! \times e\rfloor)$               	| $O(\lfloor n! \times e\rfloor)$               	|
-| 3      	| Search for valid sub-anagrams       	| $O(1)$                                        	| $O(k)$                                        	|
-|        	| **Total**                           	| $O(m) + O(\lfloor n! \times e\rfloor) + O(1)$ 	| $O(m) + O(\lfloor n! \times e\rfloor) + O(k)$ 	|
+| Step # 	| Step description                    	| Time complexity                        	| Space complexity 	|
+|--------	|-------------------------------------	|----------------------------------------	|------------------	|
+| 1      	| Creating dictionary                 	| $O(m)$                                 	| $O(m)$           	|
+| 2      	| Computing all possible sub-anagrams 	| $O(\lfloor n! \times e\rfloor)$        	| $0$              	|
+| 3      	| Search for valid sub-anagrams       	| $O(1)$                                 	| $O(k)$           	|
+|        	| **Total**                           	| $O(m) + O(\lfloor n! \times e\rfloor)$ 	| $O(m+k)$         	|
 
+The total time complexity has a peculiarity, where the dominant term can either be the length of the dictionary $O(m)$ or the length of the input word $O(\lfloor n! \times e\rfloor)$, which would determine the bottleneck.
 
+| $n$ 	| $O(\lfloor n! \times e\rfloor)$ 	| Compared to $O(m)$                                                                                                                   	|
+|-----	|---------------------------------	|--------------------------------------------------------------------------------------------------------------------------------------	|
+| 1   	| 2                               	| Computation time for sub-anagrams < creating dictionary                                                                              	|
+| 2   	| 5                               	| Computation time for sub-anagrams < creating dictionary                                                                              	|
+| 3   	| 16                              	| Computation time for sub-anagrams < creating dictionary                                                                              	|
+| 4   	| 65                              	| Computation time for sub-anagrams < creating dictionary                                                                              	|
+| 5   	| 326                             	| Computation time for sub-anagrams < creating dictionary                                                                              	|
+| 6   	| 1957                            	| Computation time for sub-anagrams < creating dictionary                                                                              	|
+| 7   	| 13700                           	| Computation time for sub-anagrams $\approx$ creating `mit_10k.txt`. Other dictionaries are still the bottleneck.                     	|
+| 8   	| 109601                          	| Computation time for sub-anagrams > creating `mit_10k.txt` and `corncob_lowercase.txt`. Other dictionaries are still the bottleneck. 	|
+| 9   	| 986410                          	| Computation time for sub-anagrams > creating all dictionaries. From $n \geq 9$ onwards, sub-anagram computation is the bottleneck.   	|
+
+Thus we see that for the given 4 dictionaries, 
+- For $n \leq 6$, the dictionary read/write is the bottleneck.  
+- For $n=\{7,8\}$, the bottleneck depends on which dictionary has been chosen.
+- For $n \geq 9$ sub-anagram computation is always the bottleneck.
+
+This analysis lets us focus on which process to prioritize and optimize. I believe that most words that we play with will be less than 9 characters in length. This means that we would benefit a lot by optimizing the dictionary read/write process into the working memory, rather than the sub-anagram computation.
 ## Results
 
 I chose the following dictionaries and words to compare and evaluate a comprehensive performance overview.
@@ -123,3 +150,4 @@ We also see a dramatic increase of the number of valid sub-anagrams with word le
 We can see that {'o', 'g', 'dg', 'og', 'gd'} are not actual words, and are hence not found in the `corncob_lowercase` dictionary, but are present in the `mit_10k` dictionary. This leads to many extraneous sub-anagrams. This problem only gets worse for longer words.
 ## Future functionality improvements
 1. If we have repeating characters in the input word, the duplicate permutations are currently computed before attempting to add into the `set()`. A further optimization could be to skip this computation itself.
+2. We could read the input word and only load corresponding sections from the dictionary. Eg, for input 'dog', we can only load words that start with 'd', 'o' or 'g'. This would reduce the space complexity manyfold, but introduce multiple checks for each word in the dictionary ($O(3m)$ in this case: $m$ words being checked thrice against 'd', 'o' and 'g'). Thus there is a tradeoff between space and time complexity. And we already discussed that for $n \leq 6$, and for some cases of $n=\{7,8\}$, $O(m)$ is dominating. Thus $O(3m)$ would be a even bigger hit to the runtime.

@@ -162,3 +162,4 @@ cython_debug/
 # Custom files added
 jumble_solver.ipynb
 .DS_Store
+.vscode/
