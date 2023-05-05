@@ -108,10 +108,8 @@ The total time complexity has a peculiarity, where the dominant term can either 
 
 > The complexities are thus given by
 > 
-> $$\begin{align*}
-\text{Time complexity}&: O(m) + O(\lfloor n! \times e\rfloor)\\
-\text{Space complexity}&: O(m+k)
-\end{align*}$$ 
+> $$\text{Time complexity}: O(m) + O(\lfloor n! \times e\rfloor)\\
+\text{Space complexity}: O(m+k)$$
 > where $m$ is the length of dictionary, $n$ is the length of the word, $k$ is the number of sub-anagrams matched in the dictionary and $e=2.71 \cdots$ is the Euler number.
 
 
