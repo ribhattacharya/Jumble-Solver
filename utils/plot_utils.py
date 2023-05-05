@@ -25,6 +25,7 @@ def plot_results(stats: pd.DataFrame, dictionaryNames: list[str], words: list[st
         'timeElapsed': 'Time elapsed (ms)'
     }
 
+    fig, ax = plt.subplots(figsize=(12,6))
     data = stats.pivot(index="word", columns='dictionaryName', values=attr).loc[words, dictionaryNames]
     sns.lineplot(data)
     

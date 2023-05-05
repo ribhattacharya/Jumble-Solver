@@ -34,7 +34,7 @@ def main(dictionaryName: str, word: str) -> dict:
 if __name__=='__main__':
 
     dictionaryNames = ['mit_10k.txt', 'corncob_lowercase.txt', 'english3.txt', 'words_alpha.txt']
-    words = ['cat', 'lion', 'tiger', 'pangol', 'leopard', 'flamingo']
+    words = ['cat', 'lion', 'tiger', 'pangol', 'leopard', 'flamingo', 'greyhound', 'complaints'] # There's very few 10 letter animals :-(
     attributes = ['wordLen', 'dictLen', 'validLen', 'allLen', 'timeElapsed']
     
     # Store all stats here

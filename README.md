@@ -67,12 +67,12 @@ To run the tests and view plots, run
 5. Search takes $O(1)$ complexity on average due to the `set` inplementation.
 
 ## Algorithm
-The **algorithm** is as follows:
-
-1. Check if the dictionary exists and the input words is valid.
-2. Read the dictionary and store it as a set,
-3. Permute the sub-anagrams and check if it exists in the dictionary. If yes, store it in another set.
-4. Return the set of all valid sub-anagrams.
+> The **algorithm** is as follows:
+>
+> 1. Check if the dictionary exists and the input words is valid.
+> 2. Read the dictionary and store it as a set.
+> 3. Permute the sub-anagrams and check if it exists in the dictionary. If yes, store it in another set.
+> 4. Return the set of all valid sub-anagrams.
 
 I used Python's hashset `set()` for this implementation. Insertion in both `set()` and `List[]` take $O(1)$ time. However, the current implementation (using `set()`) improves upon the previous build (using `List[]` and binary search) majorly due to two factors,
 
@@ -81,7 +81,7 @@ I used Python's hashset `set()` for this implementation. Insertion in both `set(
 
 ## Complexity analysis
 If dictionary has $m$ words and input word has $n$ characters, then 
-- **Creating dictionary**: Time: $O(m)$, Space: $O(m)$
+- **Reading dictionary**: Time: $O(m)$, Space: $O(m)$
     - Traversal over dictionary.txt file: $O(m)$
     - Adding to set: $O(1)$ for each element in dictionary
     - **Total time**: $O(m)$
@@ -99,41 +99,66 @@ If dictionary has $m$ words and input word has $n$ characters, then
 Thus given $m$ words in the dictionary, input word of length $n$, and $k$ sub-anagram matches in the dictionary, we have
 | Step # 	| Step description                    	| Time complexity                        	| Space complexity 	|
 |--------	|-------------------------------------	|----------------------------------------	|------------------	|
-| 1      	| Creating dictionary                 	| $O(m)$                                 	| $O(m)$           	|
+| 1      	| Reading dictionary                 	| $O(m)$                                 	| $O(m)$           	|
 | 2      	| Computing all possible sub-anagrams 	| $O(\lfloor n! \times e\rfloor)$        	| $0$              	|
 | 3      	| Search for valid sub-anagrams       	| $O(1)$                                 	| $O(k)$           	|
 |        	| **Total**                           	| $O(m) + O(\lfloor n! \times e\rfloor)$ 	| $O(m+k)$         	|
 
-The total time complexity has a peculiarity, where the dominant term can either be the length of the dictionary $O(m)$ or the length of the input word $O(\lfloor n! \times e\rfloor)$, which would determine the bottleneck.
+The total time complexity has a peculiarity, where the dominant term can either be the length of the dictionary $O(m)$ or the length of the input word $O(\lfloor n! \times e\rfloor)$, which would determine the bottleneck. This has been elaborated in the [results](#results) section.
 
-| $n$ 	| $O(\lfloor n! \times e\rfloor)$ 	| Compared to $O(m)$                                                                                                                   	|
-|-----	|---------------------------------	|--------------------------------------------------------------------------------------------------------------------------------------	|
-| 1   	| 2                               	| Computation time for sub-anagrams < creating dictionary                                                                              	|
-| 2   	| 5                               	| Computation time for sub-anagrams < creating dictionary                                                                              	|
-| 3   	| 16                              	| Computation time for sub-anagrams < creating dictionary                                                                              	|
-| 4   	| 65                              	| Computation time for sub-anagrams < creating dictionary                                                                              	|
-| 5   	| 326                             	| Computation time for sub-anagrams < creating dictionary                                                                              	|
-| 6   	| 1957                            	| Computation time for sub-anagrams < creating dictionary                                                                              	|
-| 7   	| 13700                           	| Computation time for sub-anagrams $\approx$ creating `mit_10k.txt`. Other dictionaries are still the bottleneck.                     	|
-| 8   	| 109601                          	| Computation time for sub-anagrams > creating `mit_10k.txt` and `corncob_lowercase.txt`. Other dictionaries are still the bottleneck. 	|
-| 9   	| 986410                          	| Computation time for sub-anagrams > creating all dictionaries. From $n \geq 9$ onwards, sub-anagram computation is the bottleneck.   	|
+> The complexities are thus given by
+> 
+> $$\begin{align*}
+\text{Time complexity}&: O(m) + O(\lfloor n! \times e\rfloor)\\
+\text{Space complexity}&: O(m+k)
+\end{align*}$$ 
+> where $m$ is the length of dictionary, $n$ is the length of the word, $k$ is the number of sub-anagrams matched in the dictionary and $e=2.71 \cdots$ is the Euler number.
 
-Thus we see that for the given 4 dictionaries, 
-- For $n \leq 6$, the dictionary read/write is the bottleneck.  
-- For $n=\{7,8\}$, the bottleneck depends on which dictionary has been chosen.
-- For $n \geq 9$ sub-anagram computation is always the bottleneck.
 
-This analysis lets us focus on which process to prioritize and optimize. I believe that most words that we play with will be less than 9 characters in length. This means that we would benefit a lot by optimizing the dictionary read/write process into the working memory, rather than the sub-anagram computation.
 ## Results
 
 I chose the following dictionaries and words to compare and evaluate a comprehensive performance overview.
 
     dictionaryNames = ['mit_10k.txt', 'corncob_lowercase.txt', 'english3.txt', 'words_alpha.txt']
-    words = ['cat', 'lion', 'tiger', 'pangol', 'leopard', 'flamingo']
+    words = ['cat', 'lion', 'tiger', 'pangol', 'leopard', 'flamingo', 'greyhound', 'complaints'] # There's very few 10 letter animals :-(
+
 
 ![timeElapsed](./results/timeElapsed.png)
 
-It is clear from the graph above that permutations of longer words are more time consuming. We also see an increasing trend of time with the size of dictionary.
+> It is clear from the graph above that permutations of longer words are more time consuming. We also see an increasing trend of time with the size of dictionary. Note that
+> 
+> - the runtime for $n \leq 7$ (_cat_ to _pangol_) is similar for a given dictionary, and does not change much with $n$ (_word length_). This region is where **$O(m)$ dominates**, and thus the runtime looks uniform for a given dictionary, regardless of the input word length $n$.
+> - $n=\{7,8\}$ is where no clear dominating effect emerges, and is based on which dictionary has been chosen. This is kind of the **transition** region.
+> - However, we start seeing a sharp increase at $n=9$. This is where $O(\lfloor n! \times e\rfloor) >> O(m)$, and the **sub-anagram computation dominates** the reading of all dictionaries.   
+
+I attempt to support this claim by the following.
+
+| Dictionary              	| # of words ($m$)|
+|-------------------------	|------------	  |
+| `mit_10k.txt`           	| 10K        	  |
+| `corncob_lowercase.txt` 	| 58K        	  |
+| `english3.txt`          	| 194K       	  |
+| `words_alpha.txt`       	| 370K       	  | 
+
+| Word length $n$ 	| $O(\lfloor n! \times e\rfloor)$ i.e. computation time for sub-anagrams 	| Compared to $O(m)$ i.e. reading dictionary (refer table above)                                                                                              	|
+|-----	|------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------	|
+| 1   	| 2                                                                      	| Computation time for sub-anagrams < reading all dictionaries                                                                                    	|
+| 2   	| 5                                                                      	| Computation time for sub-anagrams < reading all dictionaries                                                                                    	|
+| 3   	| 16                                                                     	| Computation time for sub-anagrams < reading all dictionaries                                                                                    	|
+| 4   	| 65                                                                     	| Computation time for sub-anagrams < reading all dictionaries                                                                                    	|
+| 5   	| 326                                                                    	| Computation time for sub-anagrams < reading all dictionaries                                                                                    	|
+| 6   	| 1957                                                                   	| Computation time for sub-anagrams < reading all dictionaries                                                                                    	|
+| 7   	| 13700                                                                  	| Computation time for sub-anagrams > reading `mit_10k.txt` (10K words). Other dictionaries are still the bottleneck.                             	|
+| 8   	| 109601                                                                 	| Computation time for sub-anagrams > reading `mit_10k.txt` (10K) and `corncob_lowercase.txt` (58K). Other dictionaries are still the bottleneck. 	|
+| 9   	| 986410                                                                 	| Computation time for sub-anagrams > reading all dictionaries. From $n \geq 9$ onwards, sub-anagram computation is the bottleneck.               	|
+
+> Thus we see that for the given 4 dictionaries, 
+> 
+> - For $n \leq 6$, the **dictionary read/write is the bottleneck**.  
+> - For $n=\{7,8\}$, the **bottleneck depends on which dictionary has been chosen**.
+> - For $n \geq 9$ **sub-anagram computation is always the bottleneck**.
+
+This analysis lets us focus on which process to prioritize and optimize. I believe that most words that we play with will be less than 9 characters in length. This means that we would **benefit a lot by optimizing the dictionary read/write process into the working memory**.
 
 ![validLen](./results/validLen.png)
 
