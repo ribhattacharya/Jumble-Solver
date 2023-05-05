@@ -12,6 +12,9 @@ def main(dictionaryName: str, word: str) -> None:
     dictionaryName (type str): Dictionary filename.
     word (type str): Input word/string.
     """
+    # For correct matching, convert word to lowercase, since dictionary is also converted to lowercase.
+    word = word.lower()  
+
     # Load and save dictionary
     dictionary = load_dict(dictionaryName)                 
 
@@ -46,9 +49,6 @@ if __name__=='__main__':
         raise(TypeError(f"Expected 1 or 3 arguments, got {len(sys.argv)}."))
 
     tic = time()
-    
-    # For correct matching, convert word to lowercase, since dictionary is also converted to lowercase.
-    word = word.lower()  
     
     print("------------------------------------------------------------------------------------")
     main(dictionaryName, word)
