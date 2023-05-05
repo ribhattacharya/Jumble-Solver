@@ -4,7 +4,7 @@ Return valid sub-anagrams from the dictionary.
 
 from itertools import permutations
     
-def sub_anagrams(dictionary: set[str], word: str) -> None:
+def sub_anagrams(dictionary: set[str], word: str) -> tuple[set[str], int, int]:
     """
     DESC: Returns the valid sub-anagrams by computing each possible sub-anagram and checking it in the dictionary.
 
@@ -13,8 +13,10 @@ def sub_anagrams(dictionary: set[str], word: str) -> None:
     word (type str): Input word/string.
 
     OUTPUTS:
-    subAnagrams (type set[str]): Valid sub-anagrams of the input word that are present in the given dictionary.
-
+    _validSubAnagrams (type set[str]): Valid sub-anagrams of the input word that are present in the given dictionary.
+    len(_validSubAnagrams) (type int): no. of valid sub-anagrams that matched in dictionary.
+    _len_allSubAnagrams (type int): no. of all possible anagrams computed via permutations.
+    
     EXAMPLE: For input word 'dog' and dictionary 'corncob_lowercase.txt', output is {'do', 'dog', 'go', 'god'}.
     """
     
@@ -30,9 +32,9 @@ def sub_anagrams(dictionary: set[str], word: str) -> None:
 
         # Store permutations only if they are in dictionary.
         for perm in perms:
-            _len_allSubAnagrams += 1
+            _len_allSubAnagrams += 1        # Increment counter
             
-            subAnagram =  ''.join(perm)
+            subAnagram =  ''.join(perm)     # Create word from perm
             if subAnagram in dictionary:
                 _validSubAnagrams.add(subAnagram)
     

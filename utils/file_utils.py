@@ -13,8 +13,7 @@ def load_dict(s: str) -> set[str]:
     s (type str): Dictionary filename.
     
     OUTPUTS:
-    dictionary (type set[str]): Set of lowercased words in the dictionary. 
-    Lowercased dictionary and input word ensures consistent matches. 
+    dictionary (type set[str]): Set of lowercased words in the dictionary. Lowercased dictionary and input word ensures consistent matches. 
     """
     dictionary = set()
 
