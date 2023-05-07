@@ -131,10 +131,10 @@ I attempt to support this claim by the following.
 
 | Dictionary              	| # of words ($m$)|
 |-------------------------	|------------	  |
-| `mit_10k.txt`           	| 10K        	  |
-| `corncob_lowercase.txt` 	| 58K        	  |
-| `english3.txt`          	| 194K       	  |
-| `words_alpha.txt`       	| 370K       	  | 
+| `mit_10k.txt`           	| 10,000      	  |
+| `corncob_lowercase.txt` 	| 58,000      	  |
+| `english3.txt`          	| 194,000      	  |
+| `words_alpha.txt`       	| 370,000      	  | 
 
 | Word length $n$ 	| $O(\lfloor n! \times e\rfloor)$ i.e. computation time for sub-anagrams 	| Compared to $O(m)$ i.e. reading dictionary (refer table above)                                                                                              	|
 |-----	|------------------------------------------------------------------------	|-------------------------------------------------------------------------------------------------------------------------------------------------	|
